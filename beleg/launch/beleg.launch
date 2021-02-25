@@ -1,0 +1,6 @@
+<launch>
+<node name='cam' pkg="beleg" type="cam.py" />
+<node name='processor' pkg="beleg" type="processor.py"/>
+<node name='controller' pkg="beleg" type="controller.py" />
+<node name='AI_server' pkg="beleg" type="ai_server.py" />
+</launch>
