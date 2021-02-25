@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # license removed for brevity
 
+import rospkg
 import rospy
 import torch
 
@@ -11,10 +12,19 @@ from FCNet import FCNet
 
 cv_bridge = CvBridge()
 model = FCNet(input_shape=[1, 28, 28])
-state_dict =torch.load('/home/dennis/catkin_ws/src/beleg/scripts/mnist_simple_fc.pt')
+rospack = rospack.RosPack()
+#dynamically find path to given package in ROS
+PATH = rospack.get_path('beleg')
+#loading pretrained weights and biases into state_dict
+state_dict =torch.load(PATH + '/scripts/mnist_simple_fc.pt')
+
+#feed trained parameters into the model
 model.load_state_dict(state_dict)
 
-def  handel_AI_request(req):
+"""
+This method takes an img_msg and returns a predicting what number (int32) this image represents to the Network.
+"""
+def  handle_AI_request(req):
     img = cv_bridge.imgmsg_to_cv2(req.image)
     #rospy.loginfo(img)
     img = torch.Tensor(img)
@@ -26,7 +36,7 @@ def  handel_AI_request(req):
 
 def add_AI_server():
     rospy.init_node('ai_server')
-    s = rospy.Service('ai_server', AI, handel_AI_request)
+    s = rospy.Service('ai_server', AI, handle_AI_request)
     rospy.spin()
 
 
