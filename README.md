@@ -1,172 +1,268 @@
 # ROS_Application
 
-# Inhaltsverzeichnis
-* [Overview](#task)
-  * [Implementation](#implementation) 
-  * [Documentation](#documentation) 
-* [Task 1](#task-1)
-  * [Objective 1](#objective-1)
-  * [Proceeding 1](#proceeding-1)
-* [Task 2](#task-2)
-  * [Objective 2](#objective-2)
-  * [Proceeding 2](#proceeding-2)
-* [Task 3](#task-3)
-  * [Objective 3](#objective-3)
-  * [Proceeding 3](#proceeding-3)
-* [Results](#results)
+## Inhaltsverzeichnis
+* [Kurzübersicht](#Kurzübersicht)
+
+* [Konzept artifizieller neuronaler Netze](#Konzept-artifizieller-neuronaler-Netze) 
+
+* [Robot Operating System](#Robot-Operating-System-(ROS)) 
+
+  * [Überblick zu ROS](#Überblick-zu-ROS) 
+
+  * [Komponenten- und Aufgabenbeschreibung](#Komponenten%--und-Aufgabenbeschreibung)
+
+  * [Komponenten- und Aufgabenbeschreibung](#Komponenten%--und-Aufgabenbeschreibung)
+
+  * [Benutzungsanweisung und benötigte Plugins](#Benutzungsanweisung-und-benötigte-Plugins)
+
+      * [Installation](#Installation-(Ubuntu))
+  
+      * [Programm ausführen](#Programm-ausführen)
+
+* [Auswertung](#Auswertung)
+
+  * [Experiment 1](#Experiment-1) 
+
+  * [Experiment 2](#Experiment-2)
+
+  * [Experiment 3](#Experiment-3)
+
+* [Fazit](#Fazit)
+
+---
 
 ## Kurzübersicht
-Ziel dieses Projektes war die Implementierung eines neuronalen Netzwerkes innerhalb einer ROS Umgebung, das in der Lage sein soll, eine Vorhersage darüber zu machen, welchen Wert eine handgeschriebene Ziffern von [0, 9] repräsentieren soll. Die verwendeten Bilddatenliegen der Einfachheit halber im PNG-Format vor, die Implementierung ließe jedoch mit geringfügigen Änderungen auch das Verarbeiten von VideoStreams zu diesem Zwecke zu. Das Programm wurde in Python 3 geschrieben.
 
-- basic ROS Theorie
-- Nodes, Topics, Messages
-- Konzept von Neuronalen Netzen
+Ziel dieses Projektes war die Implementierung eines neuronalen Netzwerkes innerhalb einer ROS Umgebung, das in der Lage sein soll, eine Vorhersage darüber zu machen, welchen Wert eine handgeschriebene Ziffern von [0, 9] repräsentieren soll. Die verwendeten Bilddaten liegen der Einfachheit halber im PNG-Format vor, die Implementierung ließe jedoch mit geringfügigen Änderungen auch das Verarbeiten von Video-Streams zu diesem Zwecke zu. Das Programm wurde in Python 3 geschrieben.
 
-
-
-### Documentation
-Create a README.md with
-* Inhaltsverzeichnis
-* Bescheribung der Programame und ihrer Aufgaben
-* Benutzungsanweisung und Benötigte Plugins
-* Kurze Beschreibung des theoretischen Hintergrunds und andere Basics die notwendig sind das programm zu verstehen
-  * Nodes, topics, messages, etc.
-  * Concept of neural networks
-  * etc.
-* Beschreibung der Implementierung
-* BEschreibung des Experiments und des Resultats/resultate -> siehe Vergleich merherer Architekturern
-* Nutze Plots für bestimmte Aspekte Besonders den ROS graphen für das fertige Programm
-
-## Task 1
-### Objective 1
-Implement a camera node which publishes a hardcoded image to a processing node, which is capable of image manipulation (resize, rgb to greyscale conversion, etc.). With each image, the camera node publishes simultaneously a hardcoded integer value to a new topic (of your choice). For image processing use suitable libraries. The processing node shall only subscribe to the image and not the integer topic. Further, the processed image shall be publish to a new topic (of your choice).
-
-![Sketch - Graph](material/sketch_basic.png "Sketch - Graph")
-
-### Proceeding 1
-1. Read the beginner level tutorials 1.1, 1 to 10 for the basic concepts and features of ROS: [https://wiki.ros.org/ROS/Tutorials](https://wiki.ros.org/ROS/Tutorials)
-2. Implement the talker-listener (a) and get it running (b).
-   
-   a. Tutorial 12: [https://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29](https://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29)  
- 
-   b. Tutorial 13: [https://wiki.ros.org/ROS/Tutorials/ExaminingPublisherSubscriber](https://wiki.ros.org/ROS/Tutorials/ExaminingPublisherSubscriber)  
- 
-   c. Instead of using rosrun, rewrite your application to make use of roslaunch and be capable of being started single-lined: [https://wiki.ros.org/roslaunch/XML](https://wiki.ros.org/roslaunch/XML)  
- 
-   d. **(optional)** examine your setup/application by some commands of tutorial 1-10
- 
-3. Change the talker node to send a hardcoded image (a) and and a random integer value (b) simultaneously to two different topics. You can use any image for this purpose. But don't push the resolution too far.  
-    
-   a. Instead of std_msgs.String use sensor_msgs.Image. Organize your package.xml ([https://wiki.ros.org/catkin/CMakeLists.txt](https://wiki.ros.org/catkin/CMakeLists.txt)) and CMakeList.txt ([https://wiki.ros.org/catkin/package.xml](https://wiki.ros.org/catkin/package.xml)) accordingly to the new imports.  
-    
-   b. One could use std_msgs.Int32 for defining the integer message but unfortunately primitive messages, such as float, int, etc. have no headers, which are required for later synchronization. So we need to define a custom message consisting of a header and an int32 variable (you only need the message part for now, services will be part of task 2):  
-      [https://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv#Introduction_to_msg_and_srv](https://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv#Introduction_to_msg_and_srv)  
-      
-      **Note:**  
-      Your *IntWithHeader.msg* file (or whatever you name it) will probably look like this:
-```
-Header header
-int32 data
-```
-4. Change the listener node to subscribe on the image topic
- 
-5. Change the listener from just logging the received image to processing it. Crop it for example with [OpenCV](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_table_of_contents_imgproc/py_table_of_contents_imgproc.html) 
- 
-6. Publish the processed image to a new topic of your choice (place this feature inside your processor node's subscribe-callback where you receive the image form the camera node)
- 
-7. Generate a picture of the ROS graph by RQT: [https://wiki.ros.org/rqt/Plugins](https://wiki.ros.org/rqt/Plugins)
- 
-8. Start documenting and describe the basic principles of ROS (theory).
-
-## Task 2
-### Objective 2
-Use the setup of [task 1](#task-1) and implement a controller node, which subscribes to the processed image topic of the processor and the integer topic of the camera node. Synchronize the according inputs in the controller and save them as tupels in a data structure of your choice (e.g. list, dictionary, etc.). For the synchronization use ROS build-in methods. Do **not** build your own " dirty hacked" version of synchronization. Publish the image from the controller to a newly created AI service. The AI service receives the image from the controller node and responds with an integer value. For now, use a hardcoded value. This will be replaced by the prediction of the neural network later (also an integer value).
-
-![Sketch - Graph](material/sketch_graph.png "Sketch - Graph")
-
-### Proceeding 2
-1. Create the controller node and use the ROS build-in TimeSynchronization functionality to receive the processed image from the processor node and the integer value from the camera node.  
- 
-   a. **(optional)** handle topics in general: [https://wiki.ros.org/message_filters](https://wiki.ros.org/message_filters)  
- 
-   b. TimeSynchronization: [https://wiki.ros.org/message_filters#Example_.28Python.29-1](https://wiki.ros.org/message_filters#Example_.28Python.29-1) (4.3)  
-      
-      **Note:**  
-      When using synchronization, a message with a header is required. The primitive messages such as int32 do not have headers. Due to this reason, we defined our custom message in task 1.
- 
-2. Save the inputs by a data structure of your choice in your controller node (e.g. list, dict, etc.).
- 
-3. Create a ROS service for the AI prediction task. Therefore  
- 
-   a. Include the service tutorial (two parts) in your setup and run it to be sure your basic service works.  
-      **Service Tutorials**  
-      Part 1: [https://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv#Creating_a_srv](https://wiki.ros.org/ROS/Tutorials/CreatingMsgAndSrv#Creating_a_srv)  
-      Part 2: [https://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28python%29](https://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28python%29)        
-      
-      **Note:**  
-      Some classic errors are: no execution permission set on file, forgot to rebuild caktin workspace or simply not sourcing newly build devel directory after catkin\_make. In rare setups caching issues occure. To avoid them, manually delete build and devel directories before executing catkin\_make.  
-   
-   b. Adapt the service to receive an image and return an integer value.
-      
-      **Note:**   
-      This is by far more easy than it seems. Again, do not make a dirty hack. Just wrap the ROS sensor\_msgs/Image message in your service message. See the service tutorial part 1 with an example of a msg that uses a Header, a string primitive, and two other msgs. You simply need the sensor_msg/image. Adapt the rest of the service accordingly. For the moment, use a hardcoded integer as return value of the service. This will be replaced by the prediction of the neuronal network later.  
-      Your *AI.srv* file (or whatever you name it) will probably look like this:
-```
-sensor_msgs/Image image
 ---
-int32 result
-```      
 
-and your imports in python like this:
-      
-```python
-from beginner_tutorials.srv import AI, AIResponse
+## Konzept artifizieller neuronaler Netze
+
+Artifizielle Neuronale Netzwerke entlehnen die Idee ihres Aufbaus der Neuroanatomie.
+Analog zum biologischen Vorbild, werden durch die Verschaltung vieler kleiner Funktionseinheiten (Neurone) komplexe Netze gewoben. Dies geschiet im Kontext des maschinellen Lernens in Schichten ('Layer').
+Diese artifiziellen neuronalen Netze (anN) lassen sich - entsprechendes Training vorausgesetzt - vielseitig, beispielsweise im Bereich der Mustererkennung und somit zur Klassifikation, einsetzen. 
+
+Die Wahl der Architektur hängt dabei von der zugrunde liegenden Aufgabe und dem Format der erhobenen Daten ab. (So eignen sich manche anN besser für die Unterscheidung von Bildern als zur Klassifikation akustischer Signale oder der Verarbeitung schriftlicher Sprache.) 
+
+Das Ziel beim Traininern solcher anN ist, das Netz möglichst davon abzuhalten, die Daten die es zu klassifzieren gilt, "auswendig" zu lernen (sog. 'overfitting'), sondern seine internen Gewichtungen der Erkennungsmerkmale möglichst zu generalisieren. Metaphorisch gesprochen, soll das anN das Konzept oder die grundlegende Idee einer/mehrerer Klasse/n lernen um, wenn es mit Daten konfrontiert wird, welche nicht in den Trainingsprozess einflossen, unbekannte Daten verarbeiten zu können. 
+
+Ein Modell (alternative Bezeichnung für ein anN), dass es nicht schafft aufgrund der gegebenen Merkmale/Daten eine hinreichend zufriedenstellende Klassifikation vorzunehmen leidet am sogenannten 'underfitting'. 
+
+Das Lernen findet beim sogenannten 'supervised learning' (jener Methode welche in diesem Projekt zum Einsatz kam) wie folgt statt:
+
+Zunächst wird ein anN angelegt und die Gewichtungen seiner Verbindungen zufällig initialisiert. Wir haben uns hier für die 'Fully Connected Feed Forward' - Architektur entschieden. Bei welcher - der Name lässt es bereits erahnen - jedes Neuron eine Verbindung zu jedem Neuron der nachfolgenden und vorhergehenden Schicht hat (eine Ausnahme bilden hierbei natürlich die erste und die letzte).
+
+Weiterhin benötigt man Traningsdaten in Form von einem Inputformat (Bild/Ton/Schrift ect.) und einem, diesem Trainingsbeispiel ('sample') korrekt zugeordneten, Label (eben jenen Wert, den das anN vorhersagen soll).
+
+Für dieses Projekt verwandten wir den MNIST Datensatz - eine Sammlung von über 70.000 Bildern handgeschriebener Ziffern, welchen ihr wahrer Wert bereits zugeordnet wurde.
+
+Die Ausgangsmenge dieser Daten wird vor dem Trainieren des Modells in mehrere Teile separiert.
+Üblich ist die Aufteilung in Trainings- und Testdatensatz - wobei über das genaue Verhältnis diverse Meinungen existieren - grundsätzlich sollten jedoch deutlich mehr Trainings- als Testdaten verwendet werden um effektives Lernen zu garantieren. 
+
+Unsere Aufteilung liegt bei ca. 60.000 Trainingsbeispielen zu 10.000 Testdaten.
+
+Unser Modell geht nun wie folgt vor: 
+
+Die Trainingsdaten - die in diesem Fall als schwarz-weiß-Bilder vorliegen - werden dem Netzwerk "häppchenweise" (in sog. '(Mini-)Batches') übergeben. 
+
+Jedem der 784 (28*28) Pixel eines samples ist ein Helligkeitswert zugeordnet - diese repräsentieren (im Unterschied zur Biologie in welcher Neurone entweder aktiv sind oder nicht) den Aktivierungsgrad [zwischen 0.0 und 1.0] der Neurone der ersten Schicht unseres anN. Aufgabe des Netzes ist es nun herauszufinden, welche Kombinationen von Helligkeitswert in Verbindung mit ihrer Position (die Position aller anderen Aktivierungswerte der anderen Pixel berücksichtigend) merkmalsgebend für die Zugehörigkeit zu einer Klasse sind.
+
+Je mehr Trainingsdaten zur Verfügung stehen und je variantenreicher die einzelnen Klassen dargestellt sind, desto größer ist die Aussicht auf Erfolg hinsichtlich der Generalisierungsfähigkeit des anN.
+
+Nachdem ein sample das anN durchlaufen hat, gibt das Modell eine Vorhersage (in Form von Wahrscheinlichkeitswerten für die Zugehörigkeit zu allen Klassen zwischen denen es eine Wahl zu treffen gilt) ab.
+
+Aus der Summe der quadratischen Abweichung eben jener Zugehörigkeitswahrscheinlichkeiten und dem wahren Wert der vorhergesagt werden soll, lässt sich abschätzen wie gut das Modell performt. Dieser Wert ist das Ergebnis der Kostenfunktion.
+
+Das eigentliche maschinelle "Lernen" erfolgt nun durch wiederholtes Anwendung von 'Backpropagation' - einem Verfahren um resourcensparend den invertierten Gradienten der Kostenfunktion zu berechnen bzw. zu approximieren (siehe 'stochastic gradient descent', bei dem Verfahren werden nur Teile der Trainingsdaten zur Annäherung an den Gradienten genutzt) und so herauszufinden, wie das Modell intern seine Gewichtungen anpassen muss, um noch genauere Vorhersagen zu treffen. Zusammenfassend kann man das Training eines Modells als ein Minimierungsproblem der Kostenfunktion auffassen.
+
+Interessanterweise hat man zwar durch die Auswahl der Architektur, die Auswahl und Vorverarbeitung der Trainingsdaten sowie die Lern- und Testparameter Einfluss auf die Performance des Netzes; doch was genau das Netz als Merkmalsträger einer Klasse identifiziert, bleibt dem Modell selbst überlassen - gerade deswegen ist es wichtig eine sorgfältige Auswahl zu bei der Wahl der Trainingsdaten zu treffen.
+
+---
+
+# Robot Operating System (ROS)
+
+## Überblick zu ROS
+
+Das 'Robot Operating System' besteht aus einer open source Sammlung von Software-Bibliotheken und Werkzeugen (Treiber, Algorithmen, Entwickler_innen-Tools), welche für die Erstellung von roboterbezogenen Anwendungen genutzt werden können.
+
+ROS setzt dabei auf eine Peer-to-Peer Architektur - das bedeutet in diesem Kontext, dass die einzelnen, nur für eine Aufgabe ausgelegten Programmbausteine (Nodes) über eine vordefinierte Programmierschnittstelle (application programming interface, oder kurz API) miteinander kommunizieren können und das sogar über mehrere Computer hinweg.
+
+Dafür nutzen die Nodes sogenannte 'Topic' und können entweder als 'publisher' oder 'subscriber' - also als Sender oder Empfänger - einer Nachricht ('message') konfiguriert werden. Es besteht weiterhin die Möglichkeit, mehrere topics zu sogenannten 'actions' zusammenzufassen und dadurch weitere Kontrollmöglichkeiten zu gewinnen (bspw. das Abbrechen einer Aufgabe oder das Einsehen des Fortschrittsgrades).
+
+Die eben erwähnten Messages stellen die Datenstruktur dar, welche festlegen von welchem Typ ein topic ist. Eine Nachricht kann aus verschiedenen Datentypen zusammengesetzt werden. 
+
+Ganz ähnlich zu den Messages können Nodes auch über 'services' miteinander kommunizieren. Ein Service stellt dabei eine eigene Instanz innerhalb der ROS-Architektur dar und nimmt Anfragen von Nodes entgegen und leitet diese an die entsprechende Nodes weiter.
+
+---
+
+## Komponenten- und Aufgabenbeschreibung
+
+Unsere Implementierung besteht aus vier Nodes:
+
+  - Cam
+
+  - Processor
+  
+  - Controller
+  
+  - AI-Server (Service)
+
+
+![ROS_ARCH](beleg/images/rosgraph.svg "ROS_NODES und AI-Server-Service")
+
+Der *Cam-Node* hat die Aufgabe die Inputdaten bereitzustellen. In unserem Fall simuliert der Node dies durch eine randomisierte Auswahl von Bildern der Ziffern [0, 9]. Das ausgewählte Bild wird dann an den Processor-Node weitergeleitet. Das Label - also der Zahlenwert, welchen wir zu identifizieren hoffen, sendet der Cam-Node direkt an den Controller-Node.
+
+Der *Processor-Node* nimmt das Bild des Cam-Nodes entgegen und nimmt eine Reduzierung der Inputdimension des eingehenden Bildes vor. Für das menschliche Auge ist das Bild bereits in Schwarz&Weiß gehalten, jedoch besteht das PNG aus drei (RGB-)Farbkanälen. Nach dieser Vorverarbeitung ist jedem Teil des Bildes lediglich ein einzelner Wert zugeordnet - nämlich der Heligkeitswert des entsprechenden Pixels. (An dieser Stelle wären weitere Vorverarbeitungsschritte denkbar, bspw. eine adaptive Helligkeits- oder Kontrastanpassung, wenn es darum ginge mit tatsächlichen Kameradaten zu arbeiten). Abschließend übergibt der Processer-Node das vorverarbeitete Bild 
+
+Der *Controller-Node* empfängt sowohl das prozessierte Bild, als auch das Label mit dem wahren Wert der Zahl auf dem Bild. Der Processor-Node schickt nun das Bild den AI-Server-Node und wartet auf die Antwort des AI-Server-Nodes.
+
+Der *AI-Server-Node* führt nun Analyse des übergebenen Bilds durch und liefert eine Wahrschenlichkeiten für die Zugehörigkeit des Bildes bezüglich jeder Klasse (Ziffern 0 - 9) und wählt die Zahl mit dem höchsten Wahrscheinlichkeitswert als Rückgabewert für den Controller-Node aus.
+
+Der Controller-Node gleicht abschließend die Vorhersage ('prediction') des AI-Server-Nodes mit dem Wert ab, welchen er zuvor vom Cam-Node erhalten hat und speichert das Ergebnis des Vergleichs in einer Logging-Message.
+
+---
+
+## Benutzungsanweisung und benötigte Plugins
+
+### Installation (Ubuntu)
+
+- Python3 & PIP (docs.python-guide.org/starting/install3/linux/)
+  - Additional Python Libraries
+      - numpy   (pypi.org/project/numpy/)
+      - pytorch   (pytorch.org/)
+      - opencv    (pypi.org/project/opencv-python/)
+      - PIL (pillow.readthedocs.io/en/stable/installation.html)
+      - matplotlib (pypi.org/project/matplotlib/)
+
+- ROS Noetic (wiki.ros.org/noetic/Installation/Ubuntu)
+
+- Einrichten des ROS-Workspace (http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment)
+
+---
+
+### Programm ausführen
+
+```shell
+$ cd <PATH_TO_YOUR_CATKIN_WORKSPACE>
+
+$ source /opt/ros/noetic/setup.bash
+
+$ source devl/setup.bash
+
+$ roslaunch beleg beleg.launch
 ```
-      
-4. Send the image from the controller to the AI service and save the returned integer into a temporary variable.  
- 
-5. Run your application and generate a picture of the ROS graph by RQT: [https://wiki.ros.org/rqt/Plugins](https://wiki.ros.org/rqt/Plugins)
- 
-6. Continue documenting and describe the basic principles of ROS (theory). Further, describe the concept and implementation of your current application (the graph setup is complete at this state. Only changes inside functions will happen from now on, regarding the AI and according image processing methods).
+Stell sicher, dass sich das Programm im Workspace befindet und zuvor ```catkin_make``` ausgeführt wurde!
 
-## Task 3
-### Objective 3
-Use a framework of your choice that supports Python3 (ROS dependency) to train a model on the MNIST dataset and save it. Afterwards, adapt the processing node to identically transform the images based on your training transformation. Adapt your ROS application to load your model and predict the digit received in the AI service. Automatically compare the received prediction with the stored true value in the controller node.  
-As last step, make your input random in the camera node by generating a number between 0-9 and load the image accordingly. Finally, check if your set up is still synchronized and that everything works as expected.
+---
 
-### Proceeding 3
-The proceeding is split into three parts. The training, the prediction and evaluation. At first you will train a model, which is saved and loaded later on by the ROS application to predict the digit of a given image.
+## Auswertung
 
-#### Train and Save Model 
-In order to predict the digit on the received image from the [MNIST dataset](http://yann.lecun.com/exdb/mnist/), a model needs to be trained. Therefor you can use any library you like to, as long as it is compatible to Python3 (due to ROS). Large frameworks like [PyTorch](https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html) or [Keras/Tensorflow](https://www.tensorflow.org/tutorials/keras/classification) and similiar support Python3. Also those frameworks offer MNIST dataset loaders for training.  
+Bei der Implementierung des AI-Server-Nodes haben wir uns für eine fully connected 3-Schichten-Architektur entschieden.
 
-1. Create a fully connected network by the framework of your choice
-2. Set up or use predefined processing for the MNIST dataset
-3. Train your model on the MNIST dataset
-4. Save the model
-5. Document your processing and training pipeline (implementation) and the training process (theory)
+- **Input Layer** (784 Neurone): Diese Neurone stehen stellvertretend für jedes Pixel eines samples (mit der Dimension 28 ✕ 28 ✕ 1 Pixel, da es sich um monochrome Bilder handelt).
 
-**Note:**  
-As an example, you can have a look at [this implementation](https://gitlab.com/baumannpa_teaching/pytorch-mnist). 
+- **Hidden Layer** (200 Neurone): In diesem Layer werden die klassenidentifizierenden Merkmale "gelernt".
 
-#### Load Model and Predict
-1. Replace your custom image by loading a [MNIST image](material/mnist_images) in your camera node (use the camera node's static integer value as image name).
-2. Process the image in the processing node the same way your training pipeline did (pay attention that you understand the transformation process, this is an important part for documentation). Since ROS image messages are integer based, you can handle the normalization inside the AI service (0 to 1 values as floats).
-3. Load your model in the AI service and replace the hardcoded value by the prediction of the model.  
-**Note:**  
-The model has to be loaded, not being trained on each program start. MNIST is a simple computation task but real life tasks can take up to months of training for a model. Further, the service shall return an integer value not an one-hot encoded vector.
-4. Make an automatized comparison between the predicted and true value in the controller node
-5. In the camera node, replace the static input image by a random one. Therefor use a random generated number and load an according [MNIST image](material/mnist_images).
-6. Check if your ROS application is working as expected.
-7. Document your implementation.
+- **Output Layer** (10 Neurone): Diese Neurone repräsentieren die Klassen für welche das Netzwerk Zugehörigkeitswahrscheinlichkeiten errechnet*.
 
-#### Evaluating Different Setups
-1. Train a few models (atleast two) with different setups (e.g. layer, optimizer, activation function, hyperparameter, etc.)
-2. Compare them and describe your results (use plots/diagrams if they clarify certain aspects) 
- 
-## Results
-Submit your
-* ROS application and README.md
-* scripts, notebooks, etc. whatever you used to train your models
+*Durch Zuhilfenahme einer logistischen Softmax Funktion, welche die output-Werte des Netzwerks als Wahrscheinlichkeiten interpretierbar macht.
 
-to moodle or provide a public git link. Do not include your trained models. Only code and readme. Your models' results have to be reproducable based on your provided code and documentation. 
+
+![nn](beleg/images/nn.png "nn_architecture")
+
+ ---
+
+## Experiment 1
+
+Beim Training des Netzwerks haben wir nachfolgend gelistete Parameter verwendet: 
+
+- Anzahl der Trainings-Epochen: 10
+
+- Lernrate: 0.01
+
+- (Mini-)Batchsize: 200
+
+- Optimizer: Stochastic Gradient Descent (SGD)
+
+- Loss-Funktion: Negative LogLikelihood
+
+Und dadurch folgende Ergebnisse Erzielt
+
+![nl_loss](beleg/images/nl_loss_net1.png "nl_loss_net1")
+
+![acc](beleg/images/accuracy_net1.png "acc1")
+
+Wie auf den Grafiken erkennbar, hat das Modell innerhalb der ersten beiden Epochen den größten Trainingserfolg. Getroffene Vorhersagen auf Trainings- und Testdatensatz verlaufen konvergent und steigen beide im nahezu gleichen Maße, sodass man von einem effektiven Lernvorgang sprechen kann.
+
+Nach zehn Trainingsepochen klassifiziert das Modell **~93%** der Testdaten korrekt.
+
+**Ausschnitt des ROS internen Log-Files:**
+
+|message|severity|node       |stamp               |topics                                                     |location                 |
+|-------|--------|-----------|--------------------|-----------------------------------------------------------|-------------------------|
+|True   |2       |/controller|1614777072.040301561|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+|True   |2       |/controller|1614777071.929067611|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+|True   |2       |/controller|1614777071.832456111|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+|True   |2       |/controller|1614777071.743709325|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+|True   |2       |/controller|1614777071.638434886|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+|True   |2       |/controller|1614777071.537351846|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+|True   |2       |/controller|1614777071.433935880|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+|True   |2       |/controller|1614777071.337713956|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+|True   |2       |/controller|1614777071.235073089|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+|True   |2       |/controller|1614777071.137066841|/rosout,/video_stream/pre_img_msgs,/video_stream/value_msgs|controller.py:callback:21|
+
+---
+
+## Experiment 2 (Overfitting)
+
+- Anzahl der Trainings-Epochen: 10
+
+- Lernrate: 0.01
+
+- (Mini-)Batchsize: 200
+
+- Optimizer: Adam (https://arxiv.org/pdf/1412.6980.pdf)
+
+- Loss-Funktion: Negative LogLikelihood
+
+![nl_loss](beleg/images/EXP_2_loss.png "nl_loss_net2")
+
+![acc](beleg/images/EXP_2_acc.png "acc2")
+
+
+Auf den Grafiken fällt als erstes das Schwanken von Trainings-/TestLoss im Vergleich zu den  relativ stabil verlaufenden Kurven der Trainingsdaten auf. Diese Abweichungen deuten auf eine Überanpassung (overfitting) des Modells auf den Trainingsdatensatz hin, resultierend in einer hohen Varianz auf dem Testdatensatz. Das Modell generalisiert vergleichsweise schlecht. Durch eine Anpassung der Lernrate (siehe Experiment 3) konnte dieses Phänomen vermieden werden.
+
+Die höchste Accuracy erzielte dieses Modell in der sechsten Epoche (**~96.5%**).
+
+---
+
+## Experiment 3
+
+- Anzahl der Trainings-Epochen: 10
+
+- Lernrate: 0.0001
+
+- (Mini-)Batchsize: 200
+
+- Optimizer: Adam
+
+- Loss-Funktion: Negative LogLikelihood
+
+![nl_loss](beleg/images/EXP_3_loss.png "nl_loss_net3")
+
+![acc](beleg/images/EXP_3_acc.png "acc3")
+
+Durch eine Anpassung der Lernrate nach unten um den Faktor 100 weißt das Modell eine wesentlich stabilere Lernkurve auf. Im Vergleich zum im Experiment 1 verwendeten Optimisierungsverfahren(SGD), konnten durch die Verwendung der o.g. Parameter bereits in der vierten Epoche präzisere Klassifikationen vorgenommen werden.
+
+Nach zehn Trainingsepochen klassifiziert das Modell **~97%** der Testdaten korrekt.
+
+---
+
+## Fazit
+
+Wie durch die Auswertung der Experimente deutlich wurde, können durch geringfügige Änderungen (bereits einzelner) Parameter deutlich messbare Unterschiede hinsichtlich der Performance in punto Vorhersagegenauigkeit erzielt werden.
+
+Aus den Experimenten geht hervor, dass durch eine minimale Anpassung der Hyperparameter (hier Lernrate) bei gleichzeitiger Verwendung der Optimierungsverfahrens 'Adam' bessere Ergebnisse als mit SGD-Verfahren erreicht werden können. 
+
+Weiterhin weißt das Verfahren aus Experiment 3 bereits nach kürzerer Zeit bessere Ergebnisse hinsichtlich der Accuracy als das 'stochastic gradient descent'-Verfahren auf, sodass man abschließend sagen kann, dass 'Adam' gegenüber 'SGD' bei gleicher Datenmenge zu bevorzugen ist.
